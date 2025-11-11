@@ -1,0 +1,93 @@
+#include <iostream>
+
+using namespace std;
+
+
+
+// função de mostrar o labirinto
+void ExibirLabirinto(int labirinto[7][7]){
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 7; j++){
+            if (labirinto[i][j] == 0)
+                cout << ". ";
+            else if (labirinto[i][j] == 1)
+                cout << "# ";
+            else if (labirinto[i][j] == 2)
+                cout << "J ";
+            else if (labirinto[i][j] == 3)
+                cout << "S ";
+        }
+        cout << endl;
+    }
+}
+
+
+
+// função do movimento do personagem
+void MoverPersonagem(int labirinto[7][7], char direcao, int &posX, int &posY){
+    int novaX = posX;
+    int novaY = posY;
+
+    if(direcao == 'w') // cima
+        novaX--;
+    else if(direcao == 's') // baixo
+        novaX++;
+    else if(direcao == 'a') // esquerda
+        novaY--;
+    else if(direcao == 'd') // direita
+        novaY++;
+
+    // Verifica se a nova posição é válida (dentro dos limites e não é uma parede)
+    if(novaX >= 0 && novaX < 7 && novaY >= 0 && novaY < 7 && labirinto[novaX][novaY] != 1){
+        // Atualiza a posição do personagem no labirinto
+        labirinto[posX][posY] = 0; // Marca a posição antiga como vazia
+        posX = novaX;
+        posY = novaY;
+        labirinto[posX][posY] = 2; // Marca a nova posição com o personagem
+    } else {
+        cout << "Movimento invalido!" << endl;
+    }
+}
+
+using namespace std;
+
+int main(){
+    int labirinto [7][7] = {
+        {1,1,1,1,1,0,3},
+        {1,0,0,0,0,0,1},
+        {1,0,1,1,1,0,1},
+        {1,0,1,1,1,0,1},
+        {1,0,1,0,0,0,1},
+        {1,0,0,0,1,0,1},
+        {2,0,1,1,1,1,1} 
+    };
+    while (true){
+        ExibirLabirinto(labirinto);
+        char direcao;
+        cout << "Digite a direcao para mover o personagem (w/a/s/d) ou 'q' para sair: ";
+        cin >> direcao;
+        if(direcao == 'q'){
+            cout << "Saindo do jogo." << endl;
+            break;
+        }
+        int posX, posY;
+        // Encontra a posição atual do personagem
+        for(int i = 0; i < 7; i++){
+            for(int j = 0; j < 7; j++){
+                if(labirinto[i][j] == 2){
+                    posX = i;
+                    posY = j;
+                }
+            }
+        }
+        MoverPersonagem(labirinto, direcao, posX, posY);
+        // Verifica se o personagem alcançou a saída
+        if(labirinto[0][6] == 2){
+            cout << "Parabens! Voce alcançou a saida!" << endl;
+            break;
+        }
+    }
+
+    ExibirLabirinto(labirinto);
+    return 0;
+}
